@@ -12,17 +12,41 @@ const webpackDevConfig = {
     publicPath: '/'
   },
   devServer: {
-    host: 'localhost',
+    host: '127.0.0.1',
     port: 8080,
     overlay: true,
-    open: true,
-  },
+    hot: true,
+    // open: true,
+    before: (app, server, compiler) => {
+      let chunks = Object.keys(baseConfig.entry);
+      app.get('/', (req, res) => {
+        let resHtml = `<!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+                    <title>index</title>
+                </head>
+                <body>
+                <ul>`;
+
+        chunks.forEach((chunk, index) => {
+          resHtml += `<li><a href="${chunk}.html">${chunk}.html</a></li>`;
+        });
+
+        resHtml += `</ul>
+                </body>
+                </html>`;
+
+        res.send(resHtml);
+      })
+    }
+  }
 }
 
 module.exports = new Promise((res, rej) => {
   portfinder.basePort = process.env.PORT || webpackDevConfig.devServer.port
   portfinder.getPortPromise().then(port => {
-    console.log(port);
     process.env.PORT = port
     webpackDevConfig.devServer.port = port
     res(merge(baseConfig, webpackDevConfig))

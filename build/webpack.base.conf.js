@@ -7,15 +7,24 @@ const StylelintPlugin = require('stylelint-webpack-plugin');
 const config = require('../config')
 const { rules } = require('./webpack.rules.conf')
 
+
+let htmlPlugstemplete = []
+config.htmlPages.forEach(item =>  { 
+  htmlPlugstemplete.push(new htmlWebpackPlugin(config.htmlPlugConfg(item.filename, item.filedir, item.chunks)))
+})
+
+console.log(htmlPlugstemplete);
+
 const configWebpackDev = {
   entry: config.entriesPage,
   module: {
     noParse: /jquery|lodash/,
     rules: [...rules]
   },
-  plugins:[]
+  plugins: [
+    new VueLoaderPlugin(),
+    ...htmlPlugstemplete
+  ]
 }
-
-console.log(configWebpackDev);
 
 module.exports = configWebpackDev

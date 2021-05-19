@@ -1,6 +1,6 @@
 <template>
   <div class='app'>
-    hello word
+    hello word111
   </div>
 </template>
 
@@ -10,11 +10,15 @@ export default {
     return next(vm => {});
   },
   name: 'app',
+  created() {
+  },
   data() {
     return {};
   },
 }
 </script>
 <style scoped>
-
+.app {
+  color: red;
+}
 </style>
